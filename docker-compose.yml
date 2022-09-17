@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  bot:
+    container_name: hse-hack-bot
+    restart: unless-stopped
+    image: advasileva/hse-hack-bot
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+    ports:
+      - 8080:8080
