@@ -25,8 +25,13 @@ async def create_chat(msg: types.Message):
 
     admin_id = connector.get_admin()
     await bot.send_message(admin_id, link.invite_link)
-    await chat.promote(admin_id, can_change_info=True, can_pin_messages=True)
 
+@dp.message_handler(content_types=['new_chat_members'])
+async def new_user_joined(message: types.Message):
+    chat = types.Chat()
+    for new_member in message.new_chat_members:
+        if connector.get_admin() == new_member.id:
+            await chat.promote(new_member.id, can_change_info=True, can_pin_messages=True)
 
 def start_bot():
     executor.start_polling(dp)
