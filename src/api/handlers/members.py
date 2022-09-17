@@ -12,4 +12,4 @@ class MembersView(View):
         # members = data["members"]
 
         # return Response(status=HTTPStatus.OK)
-        return Response(body='Good')
+        return Response(body="Good")

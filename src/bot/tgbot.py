@@ -1,6 +1,6 @@
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
-from src.connector import Connector
+from src.bot.connector import Connector
 from aiogram.utils import executor
 import os
 
@@ -11,7 +11,8 @@ connector = Connector()
 
 # TODO давать админские права
 
-@dp.message_handler(commands=['create'])
+
+@dp.message_handler(commands=["create"])
 async def create_chat(msg: types.Message):
     chat = types.Chat()
     chat.id = connector.get_chat_id()
@@ -25,6 +26,7 @@ async def create_chat(msg: types.Message):
     admin_id = connector.get_admin()
     await bot.send_message(admin_id, link.invite_link)
     await chat.promote(admin_id, can_change_info=True, can_pin_messages=True)
+
 
 def start_bot():
     executor.start_polling(dp)
