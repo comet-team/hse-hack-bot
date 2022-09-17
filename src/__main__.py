@@ -4,6 +4,7 @@ from src.bot.tgbot import start_bot
 from src.api.run_api import run
 from src.instances import dp
 
+
 def worker(dp, loop):
     asyncio.set_event_loop(loop)
     loop.run_until_complete(start_bot(dp))
