@@ -29,8 +29,9 @@ async def create_chat(msg: types.Message):
 @dp.message_handler(content_types=['new_chat_members'])
 async def new_user_joined(message: types.Message):
     chat = types.Chat()
+    chat.id = connector.get_chat_id()
     for new_member in message.new_chat_members:
-        if connector.get_admin() == new_member.id:
+        if str(connector.get_admin()) == str(new_member.id):
             await chat.promote(new_member.id, can_change_info=True, can_pin_messages=True)
 
 def start_bot():
