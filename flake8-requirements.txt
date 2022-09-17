@@ -1,0 +1,5 @@
+flake8
+flake8-builtins
+flake8-quotes
+flake8-black
+pep8-naming

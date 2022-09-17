@@ -11,5 +11,4 @@ class MembersView(View):
         # chat_id = data["chatId"]
         # members = data["members"]
 
-        # return Response(status=HTTPStatus.OK)
-        return Response(body="Good")
+        return Response(status=HTTPStatus.OK)
