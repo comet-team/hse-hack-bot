@@ -24,4 +24,4 @@ RUN apt-get update && \
 COPY --from=builder /opt/.venv /opt/.venv
 COPY . .
 
-CMD ["python", "src/tgbot.py"]
+CMD ["python", "-m", "src.__main__"]
