@@ -3,23 +3,56 @@ from aiogram import Bot, types
 from src.bot.connector import Connector
 from aiogram.utils import executor
 from src.instances import dp, TOKEN
-from get_oauth_token import index
-import http.client
+from src.utils.try_dec import try_dec
+from src.utils.ydisk_loader import upload, create_dir
+
+
 connector = Connector()
 invited_admins = set()
 
-headers = {'Authorization': ''}
-oauth_token = index()
 
+@try_dec()
 @dp.message_handler(commands=["health"])
 async def send_welcome(msg: types.Message):
     await msg.reply(f"Hey, {msg.from_user.first_name}!")
 
-@dp.message_handler(commands=["add_files"])
-async def add_files(msg: types.Message):
-    bot = Bot(token=TOKEN)
-    member = await bot.get_chat_member(msg.chat.id, msg.from_user.id)
 
+@try_dec()
+@dp.message_handler(content_types=["document", "animation", "photo", "video", "audio"])
+async def add_files(msg: types.Message):
+    chat = types.Chat()
+    bot = Bot(token=TOKEN)
+    Bot.set_current(bot)
+    member = await bot.get_chat_member(msg.chat.id, msg.from_user.id)
+    print(member.is_chat_admin())
+    if msg.caption == '/add_file' and member.is_chat_admin():
+        file_url = None
+        file_name = ""
+        if str(msg.content_type) == 'document':
+            file_url = await msg.document.get_url()
+            file_name = msg.document.file_name
+        elif str(msg.content_type) == 'photo':
+            file_url = await msg.photo[-1].get_url()
+            file_name = f'{msg.photo[-1].file_id}.jpg'
+        elif str(msg.content_type) == 'video':
+            file_url = await msg.video.get_url()
+            file_name = msg.video.file_name
+        elif str(msg.content_type) == 'animation':
+            file_url = await msg.animation.get_url()
+            file_name = msg.animation.file_name
+        elif str(msg.content_type) == 'audio':
+            file_url = await msg.audio.get_url()
+            file_name = msg.audio.file_name
+        path = msg.chat.full_name
+        create_dir(f"{path}")
+        # TODO add content types
+        upload(f"{path}/{file_name}", file_url)
+
+
+# TODO add command for getting link of group folder with correct permissions
+
+
+@try_dec()
 async def create_chat(chat_id, members):
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
@@ -31,8 +64,8 @@ async def create_chat(chat_id, members):
         await bot.send_message(member_id, link.invite_link)
 
 
+@try_dec()
 async def add_members(chat_id, members):
-    # TODO add decorator
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
     chat = types.Chat()
@@ -43,6 +76,7 @@ async def add_members(chat_id, members):
         await bot.send_message(member_id, link.invite_link)
 
 
+@try_dec()
 async def add_admin(chat_id, admin):
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
@@ -53,6 +87,8 @@ async def add_admin(chat_id, admin):
     await bot.send_message(admin, link.invite_link)
     invited_admins.add(admin)
 
+
+@try_dec()
 @dp.message_handler(content_types=["new_chat_members"])
 async def new_user_joined(message: types.Message):
     bot = Bot(token=TOKEN)
