@@ -3,23 +3,35 @@ from aiogram import Bot, types
 from src.bot.connector import Connector
 from aiogram.utils import executor
 from src.instances import dp, TOKEN
-from get_oauth_token import index
-import http.client
+from src.utils.try_dec import try_dec
+from src.utils.ydisk_loader import upload
+
+
 connector = Connector()
 invited_admins = set()
 
-headers = {'Authorization': ''}
-oauth_token = index()
 
+@try_dec()
 @dp.message_handler(commands=["health"])
 async def send_welcome(msg: types.Message):
     await msg.reply(f"Hey, {msg.from_user.first_name}!")
 
-@dp.message_handler(commands=["add_files"])
+
+@try_dec()
+@dp.message_handler(content_types=types.ContentType.DOCUMENT)
 async def add_files(msg: types.Message):
     bot = Bot(token=TOKEN)
+    Bot.set_current(bot)
     member = await bot.get_chat_member(msg.chat.id, msg.from_user.id)
+    if member.is_chat_admin():
+        file_url = await msg.document.get_url()
+        # path = msg.chat.full_name
+        # TODO create dir
+        # TODO add con types
+        upload(f"HSE Hack Comet/{msg.document.file_name}", file_url)
 
+
+@try_dec()
 async def create_chat(chat_id, members):
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
@@ -31,8 +43,8 @@ async def create_chat(chat_id, members):
         await bot.send_message(member_id, link.invite_link)
 
 
+@try_dec()
 async def add_members(chat_id, members):
-    # TODO add decorator
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
     chat = types.Chat()
@@ -43,6 +55,7 @@ async def add_members(chat_id, members):
         await bot.send_message(member_id, link.invite_link)
 
 
+@try_dec()
 async def add_admin(chat_id, admin):
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
@@ -53,6 +66,8 @@ async def add_admin(chat_id, admin):
     await bot.send_message(admin, link.invite_link)
     invited_admins.add(admin)
 
+
+@try_dec()
 @dp.message_handler(content_types=["new_chat_members"])
 async def new_user_joined(message: types.Message):
     bot = Bot(token=TOKEN)
