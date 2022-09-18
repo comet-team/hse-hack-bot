@@ -7,5 +7,6 @@ services:
     image: advasileva/hse-hack-bot
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
+      YDISK_OAUTH: ${YDISK_OAUTH}
     ports:
       - 8080:8080
