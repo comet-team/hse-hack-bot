@@ -18,17 +18,35 @@ async def send_welcome(msg: types.Message):
 
 
 @try_dec()
-@dp.message_handler(content_types=types.ContentType.DOCUMENT)
+@dp.message_handler(content_types=["document", "animation", "photo", "video", "audio"])
 async def add_files(msg: types.Message):
+    chat = types.Chat()
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
     member = await bot.get_chat_member(msg.chat.id, msg.from_user.id)
-    if member.is_chat_admin():
-        file_url = await msg.document.get_url()
+    print(member.is_chat_admin())
+    if msg.caption == '/add_file' and member.is_chat_admin():
+        file_url = None
+        file_name = ""
+        if str(msg.content_type) == 'document':
+            file_url = await msg.document.get_url()
+            file_name = msg.document.file_name
+        elif str(msg.content_type) == 'photo':
+            file_url = await msg.photo[-1].get_url()
+            file_name = f'{msg.photo[-1].file_id}.jpg'
+        elif str(msg.content_type) == 'video':
+            file_url = await msg.video.get_url()
+            file_name = msg.video.file_name
+        elif str(msg.content_type) == 'animation':
+            file_url = await msg.animation.get_url()
+            file_name = msg.animation.file_name
+        elif str(msg.content_type) == 'audio':
+            file_url = await msg.audio.get_url()
+            file_name = msg.audio.file_name
         path = msg.chat.full_name
         create_dir(f"{path}")
         # TODO add content types
-        upload(f"{path}/{msg.document.file_name}", file_url)
+        upload(f"{path}/{file_name}", file_url)
 
 
 # TODO add command for getting link of group folder with correct permissions
