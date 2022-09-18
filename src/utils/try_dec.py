@@ -7,7 +7,8 @@ def try_dec():
         async def result(*args: tuple, **kwargs: dict) -> None:
             try:
                 return await func(*args, **kwargs)
-            except Exception:
+            except Exception as ex:
+                print(ex)
                 pass
 
         return result
