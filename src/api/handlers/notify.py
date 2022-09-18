@@ -9,7 +9,8 @@ class NotifyView(BaseView):
 
     async def post(self) -> None:
         data = await self.request.json()
-        # chat_id = data["chatId"]
-        # message = data["shedule"]
-        # await send_notify(chat_id, message)
+        print("ok")
+        chat_id = data["chat_id"]
+        message = data["shedule"]
+        await send_notify(chat_id, message)
         return Response(status=HTTPStatus.OK)

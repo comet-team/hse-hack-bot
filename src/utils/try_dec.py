@@ -1,5 +1,4 @@
 from functools import wraps
-import aiogram.utils.exceptions
 
 
 def try_dec():

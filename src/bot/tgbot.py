@@ -1,5 +1,4 @@
 import asyncio
-from operator import sub
 from aiogram import Bot, types
 from src.bot.connector import subscribe_to_notifications
 from aiogram.utils import executor
@@ -11,6 +10,8 @@ invited_admins = set()
 @dp.message_handler(commands=["health"])
 async def send_welcome(msg: types.Message):
     await msg.reply(f"Hey, {msg.from_user.first_name}!")
+    print(msg.chat.id)
+    print(msg.chat.shifted_id)
 
 
 @dp.message_handler(commands=["add_files"])
@@ -22,8 +23,10 @@ async def add_files(msg: types.Message):
 async def send_notify(chat_id, message):
     bot = Bot(token=TOKEN)
     Bot.set_current(bot)
-    chat_message = await bot.send_message(chat_id, message)
-    await chat_message.pin()
+    print(message)
+    if str(message) != str("{'error': 'zero-id-request'}"):
+        chat_message = await bot.send_message(chat_id, message)
+        await chat_message.pin()
 
 
 async def add_members(chat_id, members):
@@ -35,7 +38,7 @@ async def add_members(chat_id, members):
     link = await chat.create_invite_link()
     for member_id in members:
         await bot.send_message(member_id, link.invite_link)
-    # subscribe_to_notifications(chat_id)
+    subscribe_to_notifications(chat_id, "БПМИ213")
 
 
 async def add_admin(chat_id, admin):
