@@ -15,7 +15,7 @@ docker run -dit --restart unless-stopped --name hse-hack-bot -e BOT_TOKEN=*** hs
 
 0. Добавляем токен в переменную среды
 ```
-echo "BOT_TOKEN=***" >> .env
+echo "***" >> .env
 ```
 
 1. Поднимаем контейнер
