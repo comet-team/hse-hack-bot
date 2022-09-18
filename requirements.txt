@@ -1,8 +1,5 @@
 aiogram~=2.22.1
 aiohttp~=3.8.1
-<<<<<<< HEAD
-requests
-=======
+requests~=2.28.1
 flask~=2.2.2
 requests~=2.28.1
->>>>>>> a9b135c (feat: add_files preparation)

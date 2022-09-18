@@ -1,6 +1,7 @@
 from functools import wraps
 import aiogram.utils.exceptions
 
+
 def try_dec():
     def decorator(func):
         @wraps(func)
@@ -9,5 +10,7 @@ def try_dec():
                 return await func(*args, **kwargs)
             except Exception:
                 pass
+
         return result
+
     return decorator

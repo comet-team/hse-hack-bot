@@ -1,16 +1,12 @@
-import random
+import requests
+
+NOTIFIER_URL = "http:/localhost:5000"
+subscribed_groups = set()
 
 
-class Connector:
-    def get_chat_id(self):
-        return -1001578365228
-
-    def get_chat_name(self):
-        return random.choice(["Lorem", "ipsum", "dolor", "sit", "amet"])
-
-    def get_chat_members(self):
-        return self.get_chat_id, ["838662539"]
-
-    def get_admin(self):
-        return "838662539"
-        # return '1064231416'
+def subscribe_to_notifications(group_name):
+    params = {"group_name": group_name}
+    if group_name not in subscribed_groups:
+        resp = requests.get(f"{NOTIFIER_URL}/group_name", params=params)
+        if resp.status_code == 200:
+            subscribed_groups.add(group_name)
