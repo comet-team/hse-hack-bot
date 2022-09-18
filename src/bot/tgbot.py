@@ -4,7 +4,7 @@ from src.bot.connector import Connector
 from aiogram.utils import executor
 from src.instances import dp, TOKEN
 from src.utils.try_dec import try_dec
-from src.utils.ydisk_loader import upload
+from src.utils.ydisk_loader import upload, create_dir
 
 
 connector = Connector()
@@ -25,10 +25,12 @@ async def add_files(msg: types.Message):
     member = await bot.get_chat_member(msg.chat.id, msg.from_user.id)
     if member.is_chat_admin():
         file_url = await msg.document.get_url()
-        # path = msg.chat.full_name
-        # TODO create dir
-        # TODO add con types
-        upload(f"HSE Hack Comet/{msg.document.file_name}", file_url)
+        path = msg.chat.full_name
+        create_dir(f'{path}')
+        # TODO add content types
+        upload(f"{path}/{msg.document.file_name}", file_url)
+    
+# TODO add command for getting link of group folder with correct permissions
 
 
 @try_dec()

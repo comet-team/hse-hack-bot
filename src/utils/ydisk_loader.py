@@ -8,10 +8,14 @@ headers = {
     "Accept": "application/json",
     "Authorization": f'OAuth {os.environ["YDISK_OAUTH"]}',
 }
+ROOT = 'HSE Hack Comet'
+
+
+def create_dir(path):
+    params = {"path": f"{ROOT}/{path}"}
+    requests.put(f"{YDISK_URL}", params=params, headers=headers)
 
 
 def upload(path, file_url):
-    params = {"path": path, "url": file_url}
-    print(params)
-    resp = requests.post(f"{YDISK_URL}/upload", params=params, headers=headers)
-    print(resp)
+    params = {"path": f"{ROOT}/{path}", "url": file_url}
+    requests.post(f"{YDISK_URL}/upload", params=params, headers=headers)
