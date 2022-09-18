@@ -26,10 +26,11 @@ async def add_files(msg: types.Message):
     if member.is_chat_admin():
         file_url = await msg.document.get_url()
         path = msg.chat.full_name
-        create_dir(f'{path}')
+        create_dir(f"{path}")
         # TODO add content types
         upload(f"{path}/{msg.document.file_name}", file_url)
-    
+
+
 # TODO add command for getting link of group folder with correct permissions
 
 

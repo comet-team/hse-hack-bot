@@ -8,7 +8,7 @@ headers = {
     "Accept": "application/json",
     "Authorization": f'OAuth {os.environ["YDISK_OAUTH"]}',
 }
-ROOT = 'HSE Hack Comet'
+ROOT = "HSE Hack Comet"
 
 
 def create_dir(path):
